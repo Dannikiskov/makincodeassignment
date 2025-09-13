@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace GrpcService.Data.Entities;
+﻿namespace GrpcService.Data.Entities;
 
 public class NoteEntity
 {

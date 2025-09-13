@@ -1,6 +1,5 @@
 ﻿using Grpc.Core;
 using GrpcService.Data;
-using Microsoft.EntityFrameworkCore;
 
 namespace GrpcService.Services;
 
