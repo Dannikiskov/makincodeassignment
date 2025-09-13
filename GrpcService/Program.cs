@@ -6,20 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddGrpc();
-builder.Services.AddDbContext<AppDbContext>(options =>
-{
-    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-
-    if (string.IsNullOrEmpty(connectionString))
-    {
-        options.UseInMemoryDatabase("GrpcDb");
-    }
-    else
-    {
-        options.UseSqlServer(connectionString);
-    }
-        
-});
+builder.Services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("GrpcDb"));
 
 var app = builder.Build();
 
