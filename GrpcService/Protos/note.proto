@@ -1,0 +1,42 @@
+﻿syntax = "proto3";
+
+package grpcservice;
+option csharp_namespace = "GrpcService";
+    
+message Note {
+  string uuid = 1;
+  string headline = 2;
+  string text = 3;
+  string userUuid = 4;
+}
+
+service NoteService {
+  rpc CreateNote (CreateNoteRequest) returns (Note);
+  rpc GetNote (GetNoteRequest) returns (Note);
+  rpc UpdateNote (UpdateNoteRequest) returns (Note);
+  rpc DeleteNote (DeleteNoteRequest) returns (DeleteNoteResponse);
+}
+
+message CreateNoteRequest {
+  string headline = 1;
+  string text = 2;
+  string userUuid = 3;
+}
+
+message GetNoteRequest {
+  string uuid = 1;
+}
+
+message UpdateNoteRequest {
+  string uuid = 1;
+  string headline = 2;
+  string text = 3;
+}
+
+message DeleteNoteRequest {
+  string uuid = 1;
+}
+
+message DeleteNoteResponse {
+  bool success = 1;
+}

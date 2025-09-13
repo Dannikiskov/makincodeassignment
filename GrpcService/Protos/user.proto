@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+package grpcservice;
+option csharp_namespace = "GrpcService";
+
+import "google/protobuf/timestamp.proto";
+import "note.proto";
+
+message User {
+  string uuid = 1;
+  string name = 2;
+  google.protobuf.Timestamp birthday = 3;
+}
+
+message UserWithNotes {
+  string uuid = 1;
+  string name = 2;
+  google.protobuf.Timestamp birthday = 3;
+  repeated Note notes = 4;
+}
+
+service UserService {
+  rpc CreateUser (CreateUserRequest) returns (User);
+  rpc GetUser (GetUserRequest) returns (User);
+  rpc UpdateUser (UpdateUserRequest) returns (User);
+  rpc DeleteUser (DeleteUserRequest) returns (DeleteUserResponse);
+  rpc GetUserWithNotes (GetUserRequest) returns (UserWithNotes);
+}
+
+message CreateUserRequest {
+  string name = 1;
+  google.protobuf.Timestamp birthday = 2;
+}
+
+message GetUserRequest {
+  string uuid = 1;
+}
+
+message UpdateUserRequest {
+  string uuid = 1;
+  string name = 2;
+}
+
+message DeleteUserRequest {
+  string uuid = 1;
+}
+
+message DeleteUserResponse {
+  bool success = 1;
+}
