@@ -9,11 +9,12 @@ namespace GrpcService.Tests;
 
 public class NoteServiceTests
 {
-    private AppDbContext GetInMemoryDb()
+    private static AppDbContext GetInMemoryDb()
     {
         var options = new DbContextOptionsBuilder<AppDbContext>()
             .UseInMemoryDatabase(Guid.NewGuid().ToString())
             .Options;
+
         return new AppDbContext(options);
     }
 
