@@ -57,7 +57,7 @@ public class UserService(AppDbContext db) : GrpcService.UserService.UserServiceB
             Uuid = noteEntity.Uuid,
             Text = noteEntity.Text,
             Headline = noteEntity.Headline,
-            UserUuid = noteEntity.Uuid
+            UserUuid = noteEntity.UserUuid
         });
         
         userWithNotes.Notes.AddRange(mappedNotes);

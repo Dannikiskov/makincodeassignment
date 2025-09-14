@@ -38,7 +38,8 @@ public class NoteService(AppDbContext db) : GrpcService.NoteService.NoteServiceB
         {
             Uuid = note.Uuid,
             Headline = note.Headline,
-            Text = note.Text
+            Text = note.Text,
+            UserUuid = note.UserUuid
         };
     }
 
@@ -56,7 +57,8 @@ public class NoteService(AppDbContext db) : GrpcService.NoteService.NoteServiceB
         {
             Uuid = note.Uuid,
             Headline = note.Headline,
-            Text = note.Text
+            Text = note.Text,
+            UserUuid = note.UserUuid
         };
     }
 
