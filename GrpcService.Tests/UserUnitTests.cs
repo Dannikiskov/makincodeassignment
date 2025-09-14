@@ -50,6 +50,7 @@ public class UserServiceTests
             Name = "Bob",
             Birthday = new DateTime(1980, 1, 1)
         };
+        
         db.Users.Add(user);
         await db.SaveChangesAsync();
 
@@ -76,6 +77,7 @@ public class UserServiceTests
             Name = "Charlie",
             Birthday = new DateTime(1990, 1, 1, 0, 0, 0, DateTimeKind.Utc)
         };
+        
         db.Users.Add(user);
         await db.SaveChangesAsync();
 
@@ -105,6 +107,7 @@ public class UserServiceTests
             Name = "Dana",
             Birthday = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc)
         };
+        
         db.Users.Add(user);
         await db.SaveChangesAsync();
 
@@ -130,6 +133,7 @@ public class UserServiceTests
             Name = "Eve",
             Birthday = new DateTime(1995, 1, 1)
         };
+        
         var note1 = new Data.Entities.NoteEntity
         {
             Headline = "Note1",
@@ -143,6 +147,7 @@ public class UserServiceTests
             Text = "Text2",
             User = user
         };
+        
         user.Notes.Add(note1);
         user.Notes.Add(note2);
         db.Users.Add(user);
@@ -207,5 +212,25 @@ public class UserServiceTests
         var ex = await Assert.ThrowsAsync<RpcException>(() =>
             service.DeleteUser(request, null!));
         Assert.Equal(StatusCode.NotFound, ex.StatusCode);
+    }
+    
+    [Fact]
+    public async Task CreateUser_ShouldThrowIfNameIsInvalid()
+    {
+        // Arrange
+        var db = GetInMemoryDb();
+        var service = new GrpcService.Services.UserService(db);
+        
+        var request = new CreateUserRequest
+        {
+            Name = "",
+            Birthday = null
+        };
+
+        // Act
+        var ex = await Assert.ThrowsAsync<RpcException>(() => service.CreateUser(request, null!));
+        
+        // Assert
+        Assert.Equal(StatusCode.InvalidArgument, ex.StatusCode);
     }
 }
