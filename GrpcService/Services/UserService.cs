@@ -9,6 +9,11 @@ public class UserService(AppDbContext db) : GrpcService.UserService.UserServiceB
 {
     public override async Task<User> CreateUser(CreateUserRequest request, ServerCallContext context)
     {
+        if (request is { Name: null or "" } or { Birthday: null })
+        {
+            throw new RpcException(new Status(StatusCode.InvalidArgument, "Request must contain Name and Birthday."));
+        }
+        
         var entity = new Data.Entities.UserEntity
         {
             Name = request.Name,
@@ -28,6 +33,11 @@ public class UserService(AppDbContext db) : GrpcService.UserService.UserServiceB
 
     public override async Task<User> GetUser(GetUserRequest request, ServerCallContext context)
     {
+        if (request is { Uuid: null or "" })
+        {
+            throw new RpcException(new Status(StatusCode.InvalidArgument, "Request must contain Uuid"));
+        }
+        
         var user = await db.Users.FirstOrDefaultAsync(u => u.Uuid == request.Uuid)
                     ?? throw new RpcException(new Status(StatusCode.NotFound, "User not found"));
 
@@ -41,6 +51,11 @@ public class UserService(AppDbContext db) : GrpcService.UserService.UserServiceB
     
     public override async Task<UserWithNotes> GetUserWithNotes(GetUserRequest request, ServerCallContext context)
     {
+        if (request is { Uuid: null or "" })
+        {
+            throw new RpcException(new Status(StatusCode.InvalidArgument, "Request must contain Uuid"));
+        }
+        
         var user = await db.Users.Include(u => u.Notes)
             .FirstOrDefaultAsync(u => u.Uuid == request.Uuid)
                 ?? throw new RpcException(new Status(StatusCode.NotFound, "User not found"));
@@ -67,6 +82,11 @@ public class UserService(AppDbContext db) : GrpcService.UserService.UserServiceB
 
     public override async Task<User> UpdateUser(UpdateUserRequest request, ServerCallContext context)
     {
+        if (request is { Name: null or "" })
+        {
+            throw new RpcException(new Status(StatusCode.InvalidArgument, "Request must contain Name."));
+        }
+        
         var user = await db.Users.FindAsync(request.Uuid)
                     ?? throw new RpcException(new Status(StatusCode.NotFound, "User not found"));
 
@@ -83,6 +103,11 @@ public class UserService(AppDbContext db) : GrpcService.UserService.UserServiceB
 
     public override async Task<DeleteUserResponse> DeleteUser(DeleteUserRequest request, ServerCallContext context)
     {
+        if (request is { Uuid: null or "" })
+        {
+            throw new RpcException(new Status(StatusCode.InvalidArgument, "Request must contain Uuid"));
+        }
+        
         var user = await db.Users.FindAsync(request.Uuid)
                     ?? throw new RpcException(new Status(StatusCode.NotFound, "User not found"));
 

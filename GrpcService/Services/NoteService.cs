@@ -7,6 +7,11 @@ public class NoteService(AppDbContext db) : GrpcService.NoteService.NoteServiceB
 {
     public override async Task<Note> CreateNote(CreateNoteRequest request, ServerCallContext context)
     {
+        if (request is { Headline: null or "" } or { UserUuid: null or "" } or { Text: null or "" })
+        {
+            throw new RpcException(new Status(StatusCode.InvalidArgument, "Request must contain Headline, Text, and UserUuid."));
+        }
+        
         var user = await db.Users.FindAsync(request.UserUuid)
                     ?? throw new RpcException(new Status(StatusCode.NotFound, "User not found"));
 
@@ -31,6 +36,11 @@ public class NoteService(AppDbContext db) : GrpcService.NoteService.NoteServiceB
 
     public override async Task<Note> GetNote(GetNoteRequest request, ServerCallContext context)
     {
+        if (request is { Uuid: null or "" })
+        {
+            throw new RpcException(new Status(StatusCode.InvalidArgument, "Request must contain Uuid"));
+        }
+        
         var note = await db.Notes.FindAsync(request.Uuid) 
                     ?? throw new RpcException(new Status(StatusCode.NotFound, "Note not found"));
 
@@ -45,6 +55,11 @@ public class NoteService(AppDbContext db) : GrpcService.NoteService.NoteServiceB
 
     public override async Task<Note> UpdateNote(UpdateNoteRequest request, ServerCallContext context)
     {
+        if (request is { Headline: null or "" } or { Text: null or "" })
+        {
+            throw new RpcException(new Status(StatusCode.InvalidArgument, "Request must contain Headline and Text"));
+        }
+        
         var note = await db.Notes.FindAsync(request.Uuid)
                     ?? throw new RpcException(new Status(StatusCode.NotFound, "Note not found"));
 
@@ -64,6 +79,11 @@ public class NoteService(AppDbContext db) : GrpcService.NoteService.NoteServiceB
 
     public override async Task<DeleteNoteResponse> DeleteNote(DeleteNoteRequest request, ServerCallContext context)
     {
+        if (request is { Uuid: null or "" })
+        {
+            throw new RpcException(new Status(StatusCode.InvalidArgument, "Request must contain Uuid"));
+        }
+        
         var note = await db.Notes.FindAsync(request.Uuid)
             ?? throw new RpcException(new Status(StatusCode.NotFound, "Note not found"));
 
